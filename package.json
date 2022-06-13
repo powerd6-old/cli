@@ -1,0 +1,41 @@
+{
+  "name": "@powerd6/cli",
+  "version": "1.0.0",
+  "description": "A cli tool to help with building and maintaining powerd6 modules ",
+  "main": "./build/src/index.js",
+  "bin": {
+    "powerd6-cli": "./build/src/index.js"
+  },
+  "scripts": {
+    "test": "jest",
+    "build": "tsc -p .",
+    "watch": "tsc -w",
+    "lint": "gts lint",
+    "clean": "gts clean",
+    "compile": "tsc",
+    "fix": "gts fix",
+    "prepare": "npm run compile",
+    "pretest": "npm run compile",
+    "posttest": "npm run lint"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/powerd6/cli.git"
+  },
+  "author": "",
+  "license": "UNLICENSED",
+  "bugs": {
+    "url": "https://github.com/powerd6/cli/issues"
+  },
+  "homepage": "https://github.com/powerd6/cli#readme",
+  "devDependencies": {
+    "@types/node": "^14.11.2",
+    "gts": "^3.1.0",
+    "jest": "^28.1.1",
+    "typescript": "^4.0.3"
+  },
+  "dependencies": {
+    "chalk": "^5.0.1",
+    "commander": "^9.3.0"
+  }
+}
