@@ -1,4 +1,5 @@
 import {existsSync, readFileSync} from 'fs';
+import {Module} from './module';
 
 interface DestinationConfiguration {
   directory?: string;
@@ -41,4 +42,20 @@ export function getConfiguration(): Configuration {
     };
   }
   return defaultConfiguration;
+}
+
+export function fixConfiguration(
+  configuration: Configuration,
+  module: Module
+): Configuration {
+  Object.keys(module.models).forEach(modelKey => {
+    if (
+      configuration.source &&
+      configuration.source.content &&
+      !configuration.source.content[modelKey]
+    ) {
+      configuration.source.content[modelKey] = modelKey;
+    }
+  });
+  return configuration;
 }
