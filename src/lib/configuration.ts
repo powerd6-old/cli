@@ -1,20 +1,22 @@
+import {existsSync, readFileSync} from 'fs';
+
 interface DestinationConfiguration {
-  directory: string;
+  directory?: string;
 }
 
 interface SourceConfiguration {
-  directory: string;
-  authorsDirectory: string;
-  content: SourceContentConfiguration;
+  directory?: string;
+  authorsDirectory?: string;
+  content?: SourceContentConfiguration;
 }
 
 interface SourceContentConfiguration {
   [index: string]: string;
 }
 
-interface Configuration {
-  destination: DestinationConfiguration;
-  source: SourceConfiguration;
+export interface Configuration {
+  destination?: DestinationConfiguration;
+  source?: SourceConfiguration;
 }
 
 export const defaultConfiguration: Configuration = {
@@ -29,6 +31,14 @@ export const defaultConfiguration: Configuration = {
 };
 
 export function getConfiguration(): Configuration {
-  // TODO: fetch the configuration from a local file
+  const filePath = `${process.cwd()}/.powerd6.json`;
+  if (existsSync(filePath)) {
+    const fileContents = readFileSync(filePath).toString();
+    const fileConfiguration = JSON.parse(fileContents) as Configuration;
+    return {
+      ...defaultConfiguration,
+      ...fileConfiguration,
+    };
+  }
   return defaultConfiguration;
 }
