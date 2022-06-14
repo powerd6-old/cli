@@ -17,7 +17,7 @@ interface Configuration {
   source: SourceConfiguration;
 }
 
-const defaultConfiguration: Configuration = {
+export const defaultConfiguration: Configuration = {
   destination: {
     directory: 'output',
   },
@@ -28,6 +28,7 @@ const defaultConfiguration: Configuration = {
   },
 };
 
-module.exports = {
-  defaultConfiguration,
-};
+export function getConfiguration(): Configuration {
+  // TODO: fetch the configuration from a local file
+  return defaultConfiguration;
+}
