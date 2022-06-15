@@ -1,0 +1,11 @@
+# Compiled sources
+build/
+
+# Dependency directories
+node_modules/
+
+# TypeScript cache
+*.tsbuildinfo
+
+# Optional npm cache directory
+.npm
