@@ -7,7 +7,7 @@
     "powerd6-cli": "./build/src/index.js"
   },
   "scripts": {
-    "test": "jest",
+    "test": "jest --passWithNoTests",
     "build": "tsc -p .",
     "watch": "tsc -w",
     "lint": "gts lint",
