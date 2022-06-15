@@ -1,19 +1,23 @@
 import {resolve} from 'path';
 import {Configuration} from './configuration';
-import {findDataFile, loadDataFile} from './datafile';
+import {findDataFile, getDataFilesInFolder, loadDataFile} from './datafile';
+
+interface Author {
+  id: string;
+  name: string;
+  biography?: string;
+}
 
 export interface Module {
   id: string;
   name: string;
   description: string;
-  authors: {
-    [k: string]: unknown;
-  }[];
+  authors: Author[];
   models: {
     '^.$'?: string;
     [k: string]: unknown;
   };
-  content?: {
+  content: {
     '^.$'?: {
       [k: string]: unknown;
     }[];
@@ -29,4 +33,28 @@ export function getModuleDefinition(configuration: Configuration): Module {
   } else {
     throw new Error('Module not found.');
   }
+}
+
+export function withAuthors(
+  module: Module,
+  configuration: Configuration
+): Module {
+  const authors = getDataFilesInFolder(
+    `${configuration.source?.directory}/${configuration.source?.directory}/${configuration.source?.authorsDirectory}`
+  ).map(authorFilePath => loadDataFile(authorFilePath) as Author);
+  module.authors = authors;
+  return module;
+}
+
+export function withContent(
+  module: Module,
+  configuration: Configuration
+): Module {
+  Object.keys(module.models).forEach(modelKey => {
+    const content = getDataFilesInFolder(
+      `${configuration.source?.directory}/${configuration.source?.directory}/${configuration.source?.content[modelKey]}`
+    ).map(contentFilePath => loadDataFile(contentFilePath));
+    module.content[modelKey] = content;
+  });
+  return module;
 }

@@ -8,7 +8,7 @@ interface DestinationConfiguration {
 interface SourceConfiguration {
   directory?: string;
   authorsDirectory?: string;
-  content?: SourceContentConfiguration;
+  content: SourceContentConfiguration;
 }
 
 interface SourceContentConfiguration {
