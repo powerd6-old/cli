@@ -1,3 +1,5 @@
+import assert = require('assert');
+import {existsSync, mkdirSync, writeFileSync} from 'fs';
 import {resolve} from 'path';
 import {Configuration} from './configuration';
 import {findDataFile, getDataFilesInFolder, loadDataFile} from './datafile';
@@ -39,8 +41,13 @@ export function withAuthors(
   module: Module,
   configuration: Configuration
 ): Module {
+  assert(configuration.source?.directory);
+  assert(configuration.source?.authorsDirectory);
   const authors = getDataFilesInFolder(
-    `${configuration.source?.directory}/${configuration.source?.directory}/${configuration.source?.authorsDirectory}`
+    resolve(
+      configuration.source?.directory,
+      configuration.source?.authorsDirectory
+    )
   ).map(authorFilePath => loadDataFile(authorFilePath) as Author);
   module.authors = authors;
   return module;
@@ -51,10 +58,25 @@ export function withContent(
   configuration: Configuration
 ): Module {
   Object.keys(module.models).forEach(modelKey => {
+    assert(configuration.source?.directory);
+    assert(configuration.source?.content[modelKey]);
     const content = getDataFilesInFolder(
-      `${configuration.source?.directory}/${configuration.source?.directory}/${configuration.source?.content[modelKey]}`
+      resolve(
+        configuration.source?.directory,
+        configuration.source?.content[modelKey]
+      )
     ).map(contentFilePath => loadDataFile(contentFilePath));
     module.content[modelKey] = content;
   });
   return module;
+}
+
+export function toFile(module: Module, configuration: Configuration): string {
+  assert(configuration.destination?.directory);
+  if (!existsSync(resolve(configuration.destination?.directory))) {
+    mkdirSync(resolve(configuration.destination?.directory));
+  }
+  const filePath = resolve(configuration.destination?.directory, 'module.json');
+  writeFileSync(filePath, JSON.stringify(module));
+  return filePath;
 }

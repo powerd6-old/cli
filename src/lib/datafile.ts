@@ -1,8 +1,8 @@
-import {existsSync, fstat, readdirSync, readFileSync} from 'fs';
+import {existsSync, readdirSync, readFileSync} from 'fs';
 import {extname, resolve} from 'path';
 import {parse} from 'yaml';
 
-const acceptedExtensions = ['json', 'yaml', 'yml'];
+const acceptedExtensions = ['.json', '.yaml', '.yml'];
 
 export function getDataFilesInFolder(path: string): string[] {
   const folderPath = resolve(path);
@@ -23,7 +23,7 @@ export function findDataFile(
   filename: string
 ): string | undefined {
   return acceptedExtensions
-    .map(extension => resolve(path, `${filename}.${extension}`))
+    .map(extension => resolve(path, `${filename}${extension}`))
     .find(extension => existsSync(extension));
 }
 

@@ -1,7 +1,12 @@
 import {Command} from 'commander';
 
 import {fixConfiguration, getConfiguration} from '../lib/configuration';
-import {getModuleDefinition, withAuthors, withContent} from '../lib/module';
+import {
+  getModuleDefinition,
+  toFile,
+  withAuthors,
+  withContent,
+} from '../lib/module';
 
 export const buildCommand = new Command()
   .name('build')
@@ -25,4 +30,8 @@ export const buildCommand = new Command()
     console.log('Fetching module contents...');
     module = withContent(module, configuration);
     console.log('Module contents loaded', module.content);
+
+    console.log('Saving module to file...');
+    const destinationFile = toFile(module, configuration);
+    console.log(`Saved module on: ${destinationFile}`);
   });
