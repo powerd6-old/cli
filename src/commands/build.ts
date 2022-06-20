@@ -8,25 +8,36 @@ import {
   withContent,
 } from '../lib/module';
 
-const buildAction = () => {
+const buildAction = (options: {verbose: boolean}) => {
+  const {verbose} = options;
   console.log('Build command executed!');
   let configuration = getConfiguration();
-  console.log('Configuration loaded', configuration);
+  if (verbose) {
+    console.log('Configuration loaded', configuration);
+  }
 
   console.log('Loading module...');
   let module = getModuleDefinition(configuration);
-  console.log('Module loaded', module);
+  if (verbose) {
+    console.log('Module loaded', module);
+  }
 
   configuration = fixConfiguration(configuration, module);
-  console.log('Configuration updated based on the module', configuration);
+  if (verbose) {
+    console.log('Configuration updated based on the module', configuration);
+  }
 
   console.log('Fetching module authors...');
   module = withAuthors(module, configuration);
-  console.log('Module Authors loaded', module.authors);
+  if (verbose) {
+    console.log('Module Authors loaded', module.authors);
+  }
 
   console.log('Fetching module contents...');
   module = withContent(module, configuration);
-  console.log('Module contents loaded', module.content);
+  if (verbose) {
+    console.log('Module contents loaded', module.content);
+  }
 
   console.log('Saving module to file...');
   const destinationFile = toFile(module, configuration);
@@ -36,4 +47,9 @@ const buildAction = () => {
 export const buildCommand = new Command()
   .name('build')
   .description('builds a module from a sparse directory structure')
+  .option(
+    '-v, --verbose',
+    'whether or not to log extra messages during runtime',
+    false
+  )
   .action(buildAction);

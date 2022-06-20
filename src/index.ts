@@ -3,6 +3,7 @@
 import {program} from 'commander';
 
 import {buildCommand} from './commands/build';
+import {renderCommand} from './commands/render';
 
 program
   .name('powerd6-cli')
@@ -11,5 +12,6 @@ program
   );
 
 program.addCommand(buildCommand);
+program.addCommand(renderCommand);
 
 program.parse();
