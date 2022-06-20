@@ -1,6 +1,7 @@
 import {Command} from 'commander';
 import {getConfiguration} from '../lib/configuration';
 import {fromFile} from '../lib/module';
+import {moduleToMarkdown} from '../lib/rendering';
 
 const renderAction = (options: {format: string; verbose: boolean}) => {
   const {format, verbose} = options;
@@ -13,19 +14,19 @@ const renderAction = (options: {format: string; verbose: boolean}) => {
     throw new Error('Module not present! Please build it beforehand.');
   }
 
+  let result;
   switch (format) {
     case 'html':
       if (verbose) {
         console.log('Saving to html');
       }
-
       break;
     case 'markdown':
     case 'md':
       if (verbose) {
         console.log('Saving to markdown');
       }
-
+      result = moduleToMarkdown(module);
       break;
 
     default:
