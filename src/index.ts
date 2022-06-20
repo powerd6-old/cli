@@ -11,7 +11,14 @@ program
     'A cli tool to help with building and maintaining powerd6 modules'
   );
 
-program.addCommand(buildCommand);
-program.addCommand(renderCommand);
+[buildCommand, renderCommand]
+  .map(c =>
+    c.option(
+      '-v, --verbose',
+      'whether or not to log extra messages during runtime',
+      false
+    )
+  )
+  .forEach(c => program.addCommand(c));
 
 program.parse();

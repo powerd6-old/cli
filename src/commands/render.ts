@@ -36,10 +36,5 @@ const renderAction = (options: {format: string; verbose: boolean}) => {
 export const renderCommand = new Command()
   .name('render')
   .description('renders a (built) module into a distributable format')
-  .option(
-    '-v, --verbose',
-    'whether or not to log extra messages during runtime',
-    false
-  )
   .option('-f, --format <string>', 'the format of the output file', 'markdown')
   .action(renderAction);

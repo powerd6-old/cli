@@ -47,9 +47,4 @@ const buildAction = (options: {verbose: boolean}) => {
 export const buildCommand = new Command()
   .name('build')
   .description('builds a module from a sparse directory structure')
-  .option(
-    '-v, --verbose',
-    'whether or not to log extra messages during runtime',
-    false
-  )
   .action(buildAction);
