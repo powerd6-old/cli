@@ -1,6 +1,6 @@
 import {existsSync, readFileSync} from 'fs';
 import {resolve} from 'path';
-import {Module} from './module';
+import {Module} from '@powerd6/schemas/src/index';
 
 interface DestinationConfiguration {
   directory: string;
