@@ -42,7 +42,10 @@ export function moduleToMarkdown(module: Module): string {
   ][];
 
   const renderedContent = moduleContentEntries
-    .filter(([_, contents]) => contents && contents.length > 0)
+    .filter(
+      ([model, contents]) =>
+        model && model.length > 0 && contents && contents.length > 0
+    )
     .map(([model, contents]) =>
       [
         `# ${model}`,
@@ -146,7 +149,20 @@ export function authorToMarkdown(author: Author): string[] {
   ];
 }
 
-export function contentSectionToMarkdown(model: string, content: any): string {
+export function contentSectionToMarkdown(
+  model: string,
+  content:
+    | Author
+    | Attribute
+    | Effect
+    | Focus
+    | Injury
+    | Item
+    | Module
+    | Rule
+    | Species
+    | Spell
+): string {
   let data;
   let result: string[];
   switch (model.toLocaleLowerCase()) {
