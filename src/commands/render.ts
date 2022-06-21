@@ -1,7 +1,8 @@
 import {Command} from 'commander';
 import {getConfiguration} from '../lib/configuration';
 import {fromFile} from '../lib/module';
-import {moduleToMarkdown} from '../lib/rendering';
+import {toFile} from '../lib/rendering';
+import {moduleToMarkdown} from '../lib/rendering/markdown';
 
 const renderAction = (options: {format: string; verbose: boolean}) => {
   const {format, verbose} = options;
@@ -15,22 +16,31 @@ const renderAction = (options: {format: string; verbose: boolean}) => {
   }
 
   let result;
+  let resultingExtension;
   switch (format) {
     case 'html':
       if (verbose) {
         console.log('Saving to html');
       }
+      resultingExtension = 'html';
       break;
     case 'markdown':
     case 'md':
       if (verbose) {
         console.log('Saving to markdown');
       }
+      resultingExtension = 'md';
       result = moduleToMarkdown(module);
       break;
 
     default:
       break;
+  }
+  if (result && resultingExtension) {
+    const destinationFile = toFile(configuration, result, resultingExtension);
+    console.log(`Rendered module on: ${destinationFile}`);
+  } else {
+    console.log('Nothing was rendered!');
   }
 };
 

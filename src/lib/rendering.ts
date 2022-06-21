@@ -1,4 +1,21 @@
-import {Module, Author} from '@powerd6/schemas/src';
-import {moduleToMarkdown as _moduleToMarkdown} from './rendering/markdown';
+import {existsSync, mkdirSync, writeFileSync} from 'fs';
+import assert = require('node:assert');
+import {resolve} from 'path';
+import {Configuration} from './configuration';
 
-export const moduleToMarkdown = _moduleToMarkdown;
+export function toFile(
+  configuration: Configuration,
+  contents: string,
+  extension: string
+): string {
+  assert(configuration.destination?.directory);
+  if (!existsSync(resolve(configuration.destination?.directory))) {
+    mkdirSync(resolve(configuration.destination?.directory));
+  }
+  const filePath = resolve(
+    configuration.destination?.directory,
+    `module.${extension}`
+  );
+  writeFileSync(filePath, contents);
+  return filePath;
+}
