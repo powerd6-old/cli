@@ -1,5 +1,4 @@
 import {
-  Module,
   Author,
   Attribute,
   Character,
@@ -24,7 +23,7 @@ export function moduleToMarkdown(module: Module): string {
   ${module.authors.map(authorToMarkdown)}
   `;
 
-  const contents = Object.keys(module.contents)
+  const contents = Object.keys(module.content)
     .map(
       (model) => `
   # ${model}
@@ -77,10 +76,13 @@ export function contentSectionToMarkdown(model: string, content: any): string {
       `;
       break;
     case "focus":
+      return "TODO";
       break;
     case "injury":
+      return "TODO";
       break;
     case "item":
+      return "TODO";
       break;
     case "rule":
       data = content as Effect;
@@ -91,8 +93,10 @@ export function contentSectionToMarkdown(model: string, content: any): string {
       `;
       break;
     case "species":
+      return "TODO";
       break;
     case "spell":
+      return "TODO";
       break;
     case "character":
     case "module":
