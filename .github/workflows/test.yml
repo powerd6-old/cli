@@ -40,7 +40,7 @@ jobs:
       id: build-cache
       with:
         path: ./* # Cache the whole project
-        key: 'build-${{ matrix.node-version }}-${{ GITHUB_SHA }}'
+        key: 'build-${{ matrix.node-version }}-${{ github.sha }}'
 
   test:
     runs-on: ubuntu-latest
@@ -64,6 +64,6 @@ jobs:
       id: build-cache
       with:
         path: ./* # Cache the whole project
-        key: 'build-${{ matrix.node-version }}-${{ GITHUB_SHA }}'
-    
+        key: 'build-${{ matrix.node-version }}-${{ github.sha }}'
+        
     - run: npm test
