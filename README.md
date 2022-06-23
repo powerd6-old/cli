@@ -10,7 +10,7 @@ A cli tool to help with building and maintaining powerd6 modules.
 The following formats are allowed:
 
 - JSON
-- YAML
+- YAML (both `.yaml` and `.yml`)
 
 ### Configuration
 
