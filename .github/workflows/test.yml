@@ -6,14 +6,19 @@ on:
   pull_request:
     branches: [ main ]
 
+env:
+  # See supported Node.js release schedule at https://nodejs.org/en/about/releases/
+  node-lts-version: 16.x
+  node-current-version: 18.x
+
 jobs:
-  strategy:
-    matrix:
-      # See supported Node.js release schedule at https://nodejs.org/en/about/releases/
-      node-version: [16.x, 18.x]
 
   build:
     runs-on: ubuntu-latest
+
+    strategy:
+      matrix:
+        node-version: ['${{ env.node-lts-version }}', '${{ env.node-current-version }}']
     
     steps:
     - uses: actions/checkout@v3
@@ -40,6 +45,10 @@ jobs:
 
   test:
     runs-on: ubuntu-latest
+
+    strategy:
+      matrix:
+        node-version: ['${{ env.node-lts-version }}', '${{ env.node-current-version }}']
 
     needs: [build]
     
