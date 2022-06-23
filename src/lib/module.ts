@@ -1,31 +1,9 @@
 import assert = require('assert');
 import {existsSync, mkdirSync, writeFileSync} from 'fs';
+import {Module, Author} from '@powerd6/schemas/src/index';
 import {resolve} from 'path';
 import {Configuration} from './configuration';
 import {findDataFile, getDataFilesInFolder, loadDataFile} from './datafile';
-
-interface Author {
-  id: string;
-  name: string;
-  biography?: string;
-}
-
-export interface Module {
-  id: string;
-  name: string;
-  description: string;
-  authors: Author[];
-  models: {
-    '^.$'?: string;
-    [k: string]: unknown;
-  };
-  content: {
-    '^.$'?: {
-      [k: string]: unknown;
-    }[];
-    [k: string]: unknown;
-  };
-}
 
 export function getModuleDefinition(configuration: Configuration): Module {
   const modulePath = resolve(configuration.source?.directory || './');
@@ -66,6 +44,9 @@ export function withContent(
         configuration.source?.content[modelKey]
       )
     ).map(contentFilePath => loadDataFile(contentFilePath));
+    if (module.content === undefined) {
+      module.content = {};
+    }
     module.content[modelKey] = content;
   });
   return module;
@@ -79,4 +60,16 @@ export function toFile(module: Module, configuration: Configuration): string {
   const filePath = resolve(configuration.destination?.directory, 'module.json');
   writeFileSync(filePath, JSON.stringify(module));
   return filePath;
+}
+
+export function fromFile(configuration: Configuration): Module | undefined {
+  assert(configuration.destination?.directory);
+  const moduleFilePath = resolve(
+    configuration.destination.directory,
+    'module.json'
+  );
+  if (existsSync(moduleFilePath)) {
+    return loadDataFile(moduleFilePath) as Module;
+  }
+  return undefined;
 }

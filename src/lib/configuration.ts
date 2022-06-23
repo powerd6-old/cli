@@ -1,6 +1,5 @@
-import {existsSync, readFileSync} from 'fs';
-import {resolve} from 'path';
-import {Module} from './module';
+import {Module} from '@powerd6/schemas/src/index';
+import {findDataFile, loadDataFile} from './datafile';
 
 interface DestinationConfiguration {
   directory: string;
@@ -33,13 +32,11 @@ export const defaultConfiguration: Configuration = {
 };
 
 export function getConfiguration(): Configuration {
-  const filePath = resolve(process.cwd(), '.powerd6.json');
-  if (existsSync(filePath)) {
-    const fileContents = readFileSync(filePath).toString();
-    const fileConfiguration = JSON.parse(fileContents) as Configuration;
+  const filePath = findDataFile(process.cwd(), '.powerd6');
+  if (filePath) {
     return {
       ...defaultConfiguration,
-      ...fileConfiguration,
+      ...loadDataFile(filePath),
     };
   }
   return defaultConfiguration;
