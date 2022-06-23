@@ -2,7 +2,7 @@
 
 import {program} from 'commander';
 
-import { buildCommand } from "./commands/build";
+import {buildCommand} from './commands/build';
 
 program
   .name('powerd6-cli')
@@ -11,13 +11,13 @@ program
   );
 
 [buildCommand]
-  .map((c) =>
+  .map(c =>
     c.option(
-      "-v, --verbose",
-      "whether or not to log extra messages during runtime",
+      '-v, --verbose',
+      'whether or not to log extra messages during runtime',
       false
     )
   )
-  .forEach((c) => program.addCommand(c));
+  .forEach(c => program.addCommand(c));
 
 program.parse();
