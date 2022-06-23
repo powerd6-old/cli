@@ -2,19 +2,26 @@ name: Build & Test
 
 on:
   push:
-    branches: [ "main" ]
+    branches: [ $default-branch ]
   pull_request:
-    branches: [ "main" ]
+    branches: [ $default-branch ]
+
+env:
+  # See supported Node.js release schedule at https://nodejs.org/en/about/releases/
+  node_lts_version: "16.x"
+  node_current_version: "18.x"
 
 jobs:
   build:
     runs-on: ubuntu-latest
+
     strategy:
       matrix:
-        node-version: [16.x, 18.x]
-        # See supported Node.js release schedule at https://nodejs.org/en/about/releases/
+        node-version: [$node_lts_version, $node_current_version]
+    
     steps:
     - uses: actions/checkout@v3
+
     - name: Use Node.js ${{ matrix.node-version }}
       uses: actions/setup-node@v3
       with:
@@ -22,8 +29,41 @@ jobs:
         cache: 'npm'
         registry-url: 'https://npm.pkg.github.com'
         scope: '@powerd6'
+
     - run: npm ci
       env:
         NODE_AUTH_TOKEN: ${{ secrets.GH_PACKAGE_TOKEN }}
+
     - run: npm run build --if-present
+  
+    - uses: actions/cache@v3
+      id: build-cache
+      with:
+        path: ./* # Cache the whole project
+        key: 'build-${{ matrix.node-version }}-${{ GITHUB_SHA }}'
+
+  test:
+    runs-on: ubuntu-latest
+
+    strategy:
+      matrix:
+        node-version: [$node_lts_version, $node_current_version]
+    
+    steps:
+    - uses: actions/checkout@v3
+
+    - name: Use Node.js ${{ matrix.node-version }}
+      uses: actions/setup-node@v3
+      with:
+        node-version: ${{ matrix.node-version }}
+        cache: 'npm'
+        registry-url: 'https://npm.pkg.github.com'
+        scope: '@powerd6'
+  
+    - uses: actions/cache@v3
+      id: build-cache
+      with:
+        path: ./* # Cache the whole project
+        key: 'build-${{ matrix.node-version }}-${{ GITHUB_SHA }}'
+    
     - run: npm test
