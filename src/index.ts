@@ -2,8 +2,7 @@
 
 import {program} from 'commander';
 
-import {buildCommand} from './commands/build';
-import {renderCommand} from './commands/render';
+import { buildCommand } from "./commands/build";
 
 program
   .name('powerd6-cli')
