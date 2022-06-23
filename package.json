@@ -1,6 +1,6 @@
 {
   "name": "@powerd6/cli",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "A cli tool to help with building and maintaining powerd6 modules ",
   "main": "./build/src/index.js",
   "bin": {
