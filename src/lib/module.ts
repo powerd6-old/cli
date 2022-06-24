@@ -82,7 +82,7 @@ export function fromFile(configuration: Configuration) {
   return undefined;
 }
 
-function validateContents(contents: any, modelKey: string): any {
+function validateContents(contents: object, modelKey: string) {
   let validator;
   switch (modelKey) {
     case 'attribute':
