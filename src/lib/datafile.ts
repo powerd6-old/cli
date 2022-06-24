@@ -4,7 +4,7 @@ import {parse} from 'yaml';
 
 const acceptedExtensions = ['.json', '.yaml', '.yml'];
 
-export function getDataFilesInFolder(path: string): string[] {
+export function getDataFilesInFolder(path: string) {
   const folderPath = resolve(path);
   if (existsSync(folderPath)) {
     return readdirSync(folderPath, {withFileTypes: true})
@@ -18,16 +18,13 @@ export function getDataFilesInFolder(path: string): string[] {
   }
 }
 
-export function findDataFile(
-  path: string,
-  filename: string
-): string | undefined {
+export function findDataFile(path: string, filename: string) {
   return acceptedExtensions
     .map(extension => resolve(path, `${filename}${extension}`))
     .find(extension => existsSync(extension));
 }
 
-export function loadDataFile(filepath: string): object {
+export function loadDataFile(filepath: string) {
   const extension = extname(filepath);
   switch (extension) {
     case '.json':

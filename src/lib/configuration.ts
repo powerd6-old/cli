@@ -1,58 +1,39 @@
-import {Module} from '@powerd6/schemas/src/index';
 import {findDataFile, loadDataFile} from './datafile';
 
-interface DestinationConfiguration {
-  directory: string;
-}
+import {Module} from '@powerd6/schemas/src/lib/schemas/module';
 
-interface SourceConfiguration {
-  directory: string;
-  authorsDirectory: string;
-  content: SourceContentConfiguration;
-}
+import {z} from 'zod';
 
-interface SourceContentConfiguration {
-  [index: string]: string;
-}
+export const _Configuration = z.object({
+  destination: z.object({
+    directory: z.string().default('output'),
+  }),
+  source: z.object({
+    directory: z.string().default('module'),
+    authorsDirectory: z.string().default('author'),
+    content: z.map(z.string(), z.string()).optional(),
+  }),
+});
 
-export interface Configuration {
-  destination?: DestinationConfiguration;
-  source?: SourceConfiguration;
-}
+export type Configuration = z.infer<typeof _Configuration>;
 
-export const defaultConfiguration: Configuration = {
-  destination: {
-    directory: 'output',
-  },
-  source: {
-    directory: 'module',
-    authorsDirectory: 'author',
-    content: {},
-  },
-};
-
-export function getConfiguration(): Configuration {
+export function getConfiguration() {
   const filePath = findDataFile(process.cwd(), '.powerd6');
   if (filePath) {
-    return {
-      ...defaultConfiguration,
-      ...loadDataFile(filePath),
-    };
+    const loadedConfiguration = loadDataFile(filePath);
+    return _Configuration.parse(loadedConfiguration);
   }
-  return defaultConfiguration;
+  return _Configuration.parse(undefined); // Use the default configurations
 }
 
-export function fixConfiguration(
-  configuration: Configuration,
-  module: Module
-): Configuration {
+export function fixConfiguration(configuration: Configuration, module: Module) {
   Object.keys(module.models).forEach(modelKey => {
     if (
       configuration.source &&
       configuration.source.content &&
-      !configuration.source.content[modelKey]
+      !configuration.source.content.get(modelKey)
     ) {
-      configuration.source.content[modelKey] = modelKey;
+      configuration.source.content.set(modelKey, modelKey);
     }
   });
   return configuration;
